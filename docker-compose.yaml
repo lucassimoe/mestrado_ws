@@ -33,7 +33,7 @@ services:
       - ROS_IP=172.19.0.4
     volumes:
       - /dev:/dev
-      - ./mestrado:/root/catkin_ws/src/:rw
+      - ./ros/mestrado:/root/mestrado_ws/src/:rw
     networks:
       ros-net:
         ipv4_address: 172.19.0.4
