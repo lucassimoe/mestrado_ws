@@ -21,6 +21,10 @@
         <arg name="approx_sync" value="false" />
     </include>
 
+    <node pkg="mestrado" type="depth_to_range.py" name="range_distance" respawn="$(arg respawn)" 
+    respawn_delay="$(arg respawn_delay)" clear_params="$(arg clear_params)" output="$(arg output)">
+
+    </node>
     
 
 </launch>

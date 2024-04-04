@@ -52,6 +52,10 @@
 
   <exec_depend>realsense2_camera</exec_depend>
 
+  <!-- image transport plugins -->
+  <exec_depend>compressed_depth_image_transport</exec_depend>
+  <exec_depend>compressed_image_transport</exec_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
