@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import math
 import rospy
 from sensor_msgs.msg import Image, CompressedImage
 from cv_bridge import CvBridge
@@ -19,13 +20,9 @@ class DepthToRangeConverter:
     def depth_callback(self, data):
         try:
             # Converter a imagem de profundidade para matriz numpy
-            depth_image = self.bridge.imgmsg_to_cv2(data, 'passthrough')
-
-
-
+            depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
         except Exception as e:
             rospy.logerr(e)
-            return
 
         if self.square_size > 1:
             # Obtenha a profundidade média do quadrado de pixels no centro da imagem
@@ -41,24 +38,22 @@ class DepthToRangeConverter:
             center_y = depth_image.shape[0] // 2
             depth_center = depth_image[center_y, center_x]
 
-        # Converter profundidade para metros (RealSense fornece profundidade em metros)
         depth_in_meters = depth_center * 0.001
 
-        # Publicar a medida de profundidade no tópico /range_msg
+        
         range_msg = Range()
         range_msg.header.stamp = rospy.Time.now()
         range_msg.header.frame_id = 'depth_sensor_frame'  # Frame de referência da medição de profundidade
         range_msg.radiation_type = Range.INFRARED
-        range_msg.field_of_view = 1.047  # Ângulo de visão da câmera RealSense D435i em radianos
-        range_msg.min_range = 0.1  # Distância mínima de medição da câmera RealSense D435i em metros
-        range_msg.max_range = 20.0  # Distância máxima de medição da câmera RealSense D435i em metros
+        range_msg.field_of_view = 10 * math.pi / 180 # graus para radianos
+        range_msg.min_range = 0.1
+        range_msg.max_range = 20.0  
         range_msg.range = depth_in_meters
 
         self.range_pub.publish(range_msg)
 
 if __name__ == '__main__':
     try:
-        # Defina o tamanho do quadrado de pixels (square_size) para calcular a distância. Se square_size for 1, ele usará apenas um pixel.
         converter = DepthToRangeConverter()
         rospy.spin()
     except rospy.ROSInterruptException:
