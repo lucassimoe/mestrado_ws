@@ -75,10 +75,10 @@ RUN catkin config \
         --cmake-args -DCMAKE_BUILD_TYPE=Release \
     && catkin build --no-status mestrado -j$(($(nproc)-1))
     # Install all python dependencies
-    # && for file in $(find ./src -type f -name "requirements.txt"); do \
-    #     echo "Installing python requirements from $file"; \
-    #     pip3 install -r $file; \
-    # done
+    RUN for file in $(find ./src -type f -name "requirements.txt"); do \
+        echo "Installing python requirements from $file"; \
+        pip3 install -r $file; \
+    done
 
 RUN echo "source \$MESTRADO_WS/devel/setup.bash" >> /root/.bashrc
 COPY ros_entrypoint.sh /

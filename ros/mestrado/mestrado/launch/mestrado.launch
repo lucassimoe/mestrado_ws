@@ -5,23 +5,22 @@
     <arg name="clear_params" default="true" />
     <arg name="respawn_delay" default="2" />
 
-    <include file="$(find mestrado)/launch/rs_camera.launch">
+    <!-- <include file="$(find mestrado)/launch/rs_camera.launch">
         <arg name="align_depth" value="true" />
 
-    </include>
+    </include> -->
 
 
     <!-- launch rtabmap-->
 
-    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
-        <arg name="rtabmap_args" value="--delete_db_on_start" />
-        <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw" />
-        <arg name="rgb_topic" value="/camera/color/image_raw" />
-        <arg name="camera_info_topic" value="/camera/color/camera_info" />
-        <arg name="approx_sync" value="false" />
-    </include>
+
 
     <node pkg="mestrado" type="depth_to_range.py" name="range_distance" respawn="$(arg respawn)" 
+    respawn_delay="$(arg respawn_delay)" clear_params="$(arg clear_params)" output="$(arg output)">
+
+    </node>
+
+    <node pkg="mestrado" type="mono_odom.py" name="mono_odom" respawn="$(arg respawn)" 
     respawn_delay="$(arg respawn_delay)" clear_params="$(arg clear_params)" output="$(arg output)">
 
     </node>

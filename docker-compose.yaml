@@ -28,6 +28,7 @@ services:
     privileged: true
     depends_on:
       - master
+      - rs_camera
     environment:
       - ROS_MASTER_URI=http://master:11311
       - ROS_IP=172.19.0.4
@@ -41,6 +42,30 @@ services:
       - '31000-31100:31000-31100'
     sysctls:
       - net.ipv4.ip_local_port_range=31000 31100
+    stop_grace_period: 30s
+
+
+  rs_camera:
+    image: mestrado:latest
+    container_name: rs_camera
+    command: roslaunch mestrado rs_camera.launch
+    tty: true
+    privileged: true
+    depends_on:
+      - master
+    environment:
+      - ROS_MASTER_URI=http://master:11311
+      - ROS_IP=172.19.0.5
+    volumes:
+      - /dev:/dev
+      - ./ros/mestrado:/root/mestrado_ws/src/:rw
+    networks:
+      ros-net:
+        ipv4_address: 172.19.0.5
+    ports:
+      - '32000-32100:32000-32100'
+    sysctls:
+      - net.ipv4.ip_local_port_range=32000 32100
     stop_grace_period: 30s
 
 networks:
